@@ -1,0 +1,85 @@
+---
+title: "Serum Analysis"
+output: html_notebook
+by: Khadijat I.
+---
+
+#Introduction
+
+This is an analysis based on serum sample taken to analyze the level of **enzymes** present in the serum in comparison with the level of **protein** in the serum.
+The *enzymes* present include:
+*catalase
+*GSH
+*GPX
+*MDA
+
+First, the packages are loaded.
+
+```{r}
+library(tidyverse)
+```
+
+The raw data is imported and viewed.
+
+```{}
+serum_part <- read_excel("serum_part.xlsx")
+View(serum_part)
+```
+
+#Analysis
+
+##Data Summary
+
+```{r}
+serum_summary <-
+  serum_part %>%
+  rename(protein = "Total protein") %>%
+  summarise(mean(protein), sd(protein), mean(catalase), sd(catalase),
+            mean(GPX), sd(GPX), mean(MDA), sd(MDA), mean(GSH), sd(GSH),
+            cor(protein, catalase, method = "pearson"),
+            cor(protein, GSH, method = "pearson"),
+            cor(protein, MDA, method = "pearson"),
+            cor(protein, GPX, method = "pearson"))
+```
+
+view summary
+
+```{r}
+head(serum_summary)
+View(serum_summary)
+```
+
+##Data Cleaning
+
+For consistency, "Total protein" column is renamed to "protein".
+
+```{r}
+serum_part1 <- rename(serum_part, protein = `Total protein`)
+head(serum_part1)
+```
+
+##Linear Regression
+
+###Protein vs. Catalase
+```{r}
+plot(serum_part1$protein, serum_part1$catalase)
+abline(lm(serum_part1$protein~serum_part1$catalase))
+```
+
+###Protein vs. GSH
+```{r}
+plot(serum_part1$protein, serum_part1$GSH)
+abline(lm(serum_part1$protein~serum_part1$GSH))
+```
+
+###Protein vs. GPX
+```{r}
+plot(serum_part1$protein, serum_part1$GPX)
+abline(lm(serum_part1$protein~serum_part1$GPX))
+```
+
+###Protein vs. MDA
+```{r}
+plot(serum_part1$protein, serum_part1$MDA)
+abline(lm(serum_part1$protein~serum_part1$MDA))
+```
